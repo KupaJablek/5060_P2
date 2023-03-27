@@ -9,6 +9,7 @@ namespace UnoLibrary {
         private List<Card> deck;
         private List<Card> discard;
         private int cardsIndex;
+        private Dictionary<int, List<Card>> players;
 
         private Colour currentColour; // will represent colour of top of discard
 
@@ -17,7 +18,7 @@ namespace UnoLibrary {
             shuffleDeck();
 
             discard = new List<Card>();
-            setFirstCard(); // only needs to happen at start of new game
+            //setFirstCard(); // only needs to happen at start of new game
         }
 
         public void populateDeck() {

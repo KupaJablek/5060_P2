@@ -1,0 +1,14 @@
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\bin\Debug\UnoClient.exe.config
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\bin\Debug\UnoClient.exe
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\bin\Debug\UnoClient.pdb
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.csproj.AssemblyReference.cache
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.csproj.SuggestedBindingRedirects.cache
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.Properties.Resources.resources
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.csproj.GenerateResource.cache
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.csproj.CoreCompileInputs.cache
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.exe
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.pdb
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.Form1.resources
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\bin\Debug\UnoLibrary.dll
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\bin\Debug\UnoLibrary.pdb
+S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoClient\obj\Debug\UnoClient.csproj.CopyComplete
