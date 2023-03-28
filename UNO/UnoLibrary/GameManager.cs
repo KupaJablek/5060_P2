@@ -126,5 +126,74 @@ namespace UnoLibrary {
             }
             return card;
         }
+
+        public void DealCards(int numCards, int numPlayers)
+        {
+            // Create a new dictionary of player hands
+            players = new Dictionary<int, List<Card>>();
+
+            // Deal cards to each player
+            for (int i = 0; i < numPlayers; i++)
+            {
+                List<Card> hand = new List<Card>();
+
+                for (int j = 0; j < numCards; j++)
+                {
+                    hand.Add(draw());
+                }
+
+                players.Add(i, hand);
+            }
+        }
+
+        public bool EndTurn(int playerId)
+        {
+            List<Card> playerHand = players[playerId];
+
+            // Check if player has any playable cards
+            foreach (Card card in playerHand)
+            {
+                if (card.colour == currentColour ||
+                    card.value == Value.wild ||
+                    card.value == Value.wild4)
+                {
+                    return false;
+                }
+            }
+
+            // Player has no playable cards, end turn
+            return true;
+        }
+
+        public bool PlayCard(int playerId, int cardIndex)
+        {
+            List<Card> playerHand = players[playerId];
+            Card card = playerHand[cardIndex];
+
+            // Check if card is playable
+            if (card.colour == currentColour ||
+                card.value == Value.wild ||
+                card.value == Value.wild4)
+            {
+                // Remove card from player's hand and add to discard pile
+                playerHand.RemoveAt(cardIndex);
+                discard.Add(card);
+
+                // Update current colour
+                if (card.value != Value.wild && card.value != Value.wild4)
+                {
+                    currentColour = card.colour;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public List<Card> GetPlayerHand(int playerId)
+        {
+            return players[playerId];
+        }
     }
 }
