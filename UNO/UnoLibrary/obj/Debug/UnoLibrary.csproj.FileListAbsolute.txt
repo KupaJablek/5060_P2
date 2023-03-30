@@ -4,3 +4,9 @@ S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UN
 S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.csproj.CoreCompileInputs.cache
 S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.dll
 S:\Fanshawe Term 5\5060 - Component Based Prog .NET\Code\UNO-Project2\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.pdb
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\bin\Debug\UnoLibrary.dll
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\bin\Debug\UnoLibrary.pdb
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.csproj.AssemblyReference.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.csproj.CoreCompileInputs.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.dll
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO\UnoLibrary\obj\Debug\UnoLibrary.pdb
