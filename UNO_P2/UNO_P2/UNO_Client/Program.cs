@@ -145,7 +145,7 @@ namespace UNO_Client {
 
                 // can end turn now
                 // call end turn and pass current card and colour to it
-                Console.WriteLine($"Played card: {hand[cardIndex - 1]}");
+                Console.WriteLine($"Played card: {hand[cardIndex]}");
             }
 
             public static Colour chooseColour() { 
