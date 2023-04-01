@@ -1,0 +1,2 @@
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Library\obj\Debug\UNOLibrary.csproj.AssemblyReference.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Library\obj\Debug\UNOLibrary.csproj.CoreCompileInputs.cache

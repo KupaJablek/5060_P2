@@ -1,0 +1,11 @@
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\bin\Debug\UNO_Client.exe.config
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\bin\Debug\UNO_Client.exe
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\bin\Debug\UNO_Client.pdb
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\bin\Debug\UNO_Library.dll
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\bin\Debug\UNO_Library.pdb
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.csproj.AssemblyReference.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.csproj.SuggestedBindingRedirects.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.csproj.CoreCompileInputs.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.csproj.CopyComplete
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.exe
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Client\obj\Debug\UNO_Client.pdb

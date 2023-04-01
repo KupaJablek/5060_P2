@@ -1,0 +1,3 @@
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Service\obj\Debug\UNOService.csproj.AssemblyReference.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Service\obj\Debug\UNOService.csproj.SuggestedBindingRedirects.cache
+C:\CPA3\Level 5\COMP.NET_INFO5060\5060_P2\UNO_P2\UNO_P2\UNO_Service\obj\Debug\UNOService.csproj.CoreCompileInputs.cache
