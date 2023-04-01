@@ -125,8 +125,7 @@ namespace UNO_Client {
                         cardByPlayer = c;
                         nextColour = c.colour;
                         cardPlayed = true;
-                    } else if (c.value == Value.wild ||
-                        c.value == Value.wild4) {
+                    } else if (c.colour == Colour.Wild) {
                         Console.WriteLine("Please select new active colour:");
                         // colour selection
                         nextColour = chooseColour();
@@ -146,19 +145,20 @@ namespace UNO_Client {
                 Colour colour = new Colour();
 
                 bool valid = false;
-
-                int i = 1;
-                foreach (Colour c in Enum.GetValues(typeof(Colour))) {
-                    Console.WriteLine($"{i}. {c.ToString()}");
-                }
+                Console.WriteLine("1. Red");
+                Console.WriteLine("2. Green");
+                Console.WriteLine("3. Blue");
+                Console.WriteLine("4. Yellow");
                 Console.WriteLine("Enter the number of the colour youd like:");
+
                 int choice = 0;
                 while (!valid) {
                     string input = Console.ReadLine();
 
                     if (int.TryParse(input, out choice)) {
-                        if (choice < 1 || choice > 5) {
+                        if (choice > 0 || choice < 5) {
                             colour = Enum.GetValues(typeof(Colour)).Cast<Colour>().ToList().ElementAt(choice - 1);
+                            valid = true;
                         } else {
                             Console.WriteLine("Invalid choice, please try again!");
                             Console.WriteLine("Enter choice: ");
@@ -178,19 +178,16 @@ namespace UNO_Client {
                 int i = 1;
                 foreach (Card c in hand) {
                     if (topOfDiscard.colour == Colour.Wild) {
-                        if (c.colour != currentColour) {
-                            Console.WriteLine(i + ". " + c);
-                        } else {
-                            Console.WriteLine(i + ". " + c);
+                        if (c.colour == currentColour || c.colour == Colour.Wild) {
                             playableCard = true;
                         }
+                        Console.WriteLine(i + ". " + c);
                     } else {
-                        if (c.colour == topOfDiscard.colour || c.value == topOfDiscard.value) {
-                            Console.WriteLine(i + ". " + c);
+                        if (c.colour == topOfDiscard.colour || c.value == topOfDiscard.value || c.colour == Colour.Wild) {
+                            
                             playableCard = true;
-                        } else {
-                            Console.WriteLine(i + ". " + c);
                         }
+                        Console.WriteLine(i + ". " + c);
                     }
                     i++;
                 }
