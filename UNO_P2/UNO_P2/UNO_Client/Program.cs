@@ -48,7 +48,7 @@ namespace UNO_Client {
             private static Card topOfDiscard = null;
             private static Colour currentColour = new Colour();
 
-            private static Card cardByPlayer = null;
+            private static int cardIndex = 0;
             private static Colour nextColour = new Colour();
 
             public static void Main() {
@@ -65,6 +65,7 @@ namespace UNO_Client {
                             
                             if (printHand()) {
                                 PlayCard();
+                                gm.EndTurn(cardIndex, nextColour);
                             } else { 
                                 Console.WriteLine("No playable cards in hand.");
                                 Console.WriteLine("press enter to draw another.");
@@ -73,11 +74,12 @@ namespace UNO_Client {
                                 // call server and draw
                                 if (printHand()) {
                                     PlayCard();
+                                    gm.EndTurn(cardIndex, nextColour);
                                 } else {
                                     Console.WriteLine("Out of luck this time!");
+                                    gm.EndTurn(-1, nextColour);
                                 }
                             }
-                            gm.EndTurn();
                             waitHandle.Reset();
                         }
                     } while (!gameOver);
@@ -88,7 +90,12 @@ namespace UNO_Client {
             }
 
             private static void printDeckDetails() {
-                Console.WriteLine($"Top card of deck:\n\t{topOfDiscard.ToString()}");
+                Card c = topOfDiscard;
+                if (c.value == Value.wild || c.value == Value.wild4) {
+                    Console.WriteLine($"Top card of deck:\n\t{c.colour} {currentColour}");
+                } else {
+                    Console.WriteLine($"Top card of deck:\n\t{c.ToString()}");
+                }
             }
 
             public static void PlayCard() {
@@ -122,7 +129,7 @@ namespace UNO_Client {
                     if (c.colour == topOfDiscard.colour || c.value == topOfDiscard.value) {
                         // Remove card from player's hand and add to discard pile
                         // play
-                        cardByPlayer = c;
+                        cardIndex = userChoice - 1;
                         nextColour = c.colour;
                         cardPlayed = true;
                     } else if (c.colour == Colour.Wild) {
@@ -130,7 +137,7 @@ namespace UNO_Client {
                         // colour selection
                         nextColour = chooseColour();
                         cardPlayed = true;
-                        cardByPlayer = c;
+                        cardIndex = userChoice - 1;
                     } else {
                         Console.WriteLine("Invalid choice, please try again!");
                     }
@@ -138,7 +145,7 @@ namespace UNO_Client {
 
                 // can end turn now
                 // call end turn and pass current card and colour to it
-                Console.WriteLine($"Played card: {cardByPlayer}");
+                Console.WriteLine($"Played card: {hand[cardIndex - 1]}");
             }
 
             public static Colour chooseColour() { 

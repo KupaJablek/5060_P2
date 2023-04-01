@@ -27,7 +27,7 @@ namespace UnoLibrary {
         void DrawCard();
 
         [OperationContract(IsOneWay = true)]
-        void EndTurn();
+        void EndTurn(int cardIndex, Colour nextColour);
 
         [OperationContract(IsOneWay = true)]
         void NextCount();
@@ -234,6 +234,7 @@ namespace UnoLibrary {
 
             gameStarted = true;
             populateDeck();
+            shuffleDeck();
             DealCards(5, callbacks.Count());
             setFirstCard();
 
@@ -310,8 +311,32 @@ namespace UnoLibrary {
         // this will take a card index, and current colour choice
         // process the card choice, set top card of discard.
         // then resolve its effects
-        public void EndTurn() {
+        public void EndTurn(int cardIndex, Colour nextColour) {
             playerIndex = ++playerIndex % callbacks.Count;
+
+            // only do if card has been played
+            if (cardIndex != -1) {
+                Card c = players[playerIndex].ElementAt(cardIndex);
+                // card from player hand to discard
+                discard.Add(c);
+                // remove played card from hand
+                players[playerIndex].RemoveAt(cardIndex);
+
+                currentColour = nextColour;
+                // handle special effects here
+
+                switch (c.value) { 
+                    case Value.Reverse: 
+                        break;
+                    case Value.Skip:
+                        break;
+                    case Value.plus2:
+                        break;
+                    case Value.wild4:
+                        break;
+                }
+            }
+
 
             UpdateAllClients();
         }
