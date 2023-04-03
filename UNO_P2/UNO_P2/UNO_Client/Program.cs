@@ -101,6 +101,9 @@ namespace UNO_Client {
                             }
                             waitHandle.Reset();
                         }
+
+                        
+
                     } while (!gameOver);
 
                 } else {

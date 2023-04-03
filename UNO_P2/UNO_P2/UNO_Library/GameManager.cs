@@ -389,6 +389,7 @@ namespace UnoLibrary {
                     case Value.Reverse: 
                         break;
                     case Value.Skip:
+                        nextPlayerIndex = (playerIndex + 2) % callbacks.Count;
                         break;
                     case Value.plus2:
                         // add two cards to the next players hand
