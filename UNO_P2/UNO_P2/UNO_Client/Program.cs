@@ -52,7 +52,7 @@ namespace UNO_Client {
                 Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
                 Console.WriteLine("Number of players in waiting room: {0}", numPlayers);
                 if (clientID == 0) {
-                    Console.WriteLine("Press 's' to start game or any other key to leave the waiting room.");
+                    Console.WriteLine("Press 's' to start game.");
                 } else {
                     Console.WriteLine("Waiting for player 1 to start game.");
                 }
