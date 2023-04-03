@@ -286,6 +286,7 @@ namespace UnoLibrary {
 
         public void DrawCard() {
             players[playerIndex].Add(draw());
+            UpdateAllClients();
         }
 
         public int JoinGame() {
