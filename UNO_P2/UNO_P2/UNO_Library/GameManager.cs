@@ -13,10 +13,26 @@ namespace UnoLibrary {
         void Update(int nextPlayer, bool gameOver, 
             Card topOfDiscard, Colour topColour,
             List<Card> hand);
+        [OperationContract(IsOneWay = true)]
+        void WaitingRoomPlayers(int numPlayers);
     }
 
     [ServiceContract(CallbackContract = typeof(ICallback))]
     public interface IGameManager {
+        [OperationContract]
+        void UpdateAllClients();
+        [OperationContract]
+        int callbackCount();
+        [OperationContract]
+        int JoinWaitingRoom();
+        [OperationContract]
+        int LeaveWaitingRoom();
+        [OperationContract]
+        bool StartGame();
+        [OperationContract]
+        void RegisterClient();
+        [OperationContract]
+        void UnregisterClient();
         [OperationContract]
         int JoinGame();
 
@@ -31,10 +47,68 @@ namespace UnoLibrary {
 
         [OperationContract(IsOneWay = true)]
         void NextCount();
+        [OperationContract]
+        void populateDeck();
+        [OperationContract]
+        void shuffleDeck();
+        [OperationContract]
+        void setFirstCard();
+        [OperationContract]
+        void DealCards(int numCards, int numPlayers);
+
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class GameManager : IGameManager {
+        private int numberPlayers = 0;
+        public int JoinWaitingRoom() {
+            numberPlayers++;
+            UpdateWaitingClients();
+            return numberPlayers;
+        }
+        public int LeaveWaitingRoom() {
+            numberPlayers--;
+            UpdateWaitingClients();
+            Console.WriteLine("Goodbye");
+            
+            return numberPlayers;
+        }
+        public bool StartGame() {
+            if (numberPlayers > 1) {
+                return true;
+            }
+            return false;
+        }
+        public void RegisterClient() {
+            ICallback callback = OperationContext.Current.GetCallbackChannel<ICallback>();
+            callbacks.Add(callbacks.Count, callback);
+        }
+        public void UnregisterClient() {
+            ICallback callback = OperationContext.Current.GetCallbackChannel<ICallback>();
+            if (callbacks.ContainsValue(callback)) {
+                for (int i = 0; i < callbacks.Count; i++) {
+                    if (callbacks[i] == callback) {
+                        callbacks.Remove(i);
+                        Dictionary<int, ICallback> tempCBs = new Dictionary<int, ICallback>();
+                        for (int j = 0; j < callbacks.Count; j++) {
+                            if (j >= i) {
+                                tempCBs.Add(j, callbacks.ElementAt(j).Value);
+                            }
+                            else {
+                                tempCBs.Add(j, callbacks[j]);
+                            }
+                        }
+                        callbacks.Clear();
+                        foreach (KeyValuePair<int, ICallback> pair in tempCBs) {
+                            callbacks.Add(pair.Key, pair.Value);
+                        }
+                        break;
+                    }
+                }
+            }
+            UpdateWaitingClients();
+            LeaveGame();
+        }
         // game variables
         private List<Card> deck;
         private List<Card> discard;
@@ -50,10 +124,15 @@ namespace UnoLibrary {
         private bool gameStarted = false;
 
         private readonly Dictionary<int, ICallback> callbacks = null;
+        public int callbackCount() {
+            return callbacks.Count;
+        }
 
-        public GameManager() {
+
+    public GameManager() {
             populateDeck();
             shuffleDeck();
+
 
             discard = new List<Card>();
             //setFirstCard(); // only needs to happen at start of new game
@@ -232,11 +311,11 @@ namespace UnoLibrary {
                 not meant to be here but testing out the gameplay loop    
             */
 
-            gameStarted = true;
-            populateDeck();
-            shuffleDeck();
-            DealCards(5, callbacks.Count());
-            setFirstCard();
+            //gameStarted = true;
+            //populateDeck();
+            //shuffleDeck();
+            //DealCards(5, callbacks.Count());
+            //setFirstCard();
 
             return nextPlayerID++;
         }
@@ -280,6 +359,11 @@ namespace UnoLibrary {
                 // top of discard, player hand, 
                 cb.Update(callbacks.Keys.ElementAt(playerIndex), false,
                     tod, colour, GetPlayerHand(playerIndex));
+            }
+        }
+        public void UpdateWaitingClients() {
+            foreach (ICallback cb in callbacks.Values) {
+                cb.WaitingRoomPlayers(numberPlayers);
             }
         }
 

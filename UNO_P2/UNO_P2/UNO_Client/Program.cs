@@ -11,9 +11,12 @@ using System.ServiceModel;  // WCF types
 using System.Threading;
 using System.Runtime.InteropServices;   // Need this for DllImport()
 using System.ServiceModel.PeerResolvers;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace UNO_Client {
     class Program {
+        
 
         private class CBObject : ICallback {
             public void Update(int nextPlayer, bool gameStatus,
@@ -34,6 +37,13 @@ namespace UNO_Client {
                     Console.WriteLine("not your turn");
                 }
             }
+            public void WaitingRoomPlayers(int numPlayers) {
+                Console.Clear();
+                Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
+                Console.WriteLine("Number of players in waiting room: {0}", numPlayers);
+                
+                Console.WriteLine("Press 's' to start game or any other key to leave the waiting room.");
+            }
 
             private static int clientID, activeClientID = 0;
             private static bool gameOver = false;
@@ -41,6 +51,7 @@ namespace UNO_Client {
 
             private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
             private static CBObject cbObj = new CBObject();
+
 
             private static IGameManager gm = null;
 
@@ -51,10 +62,17 @@ namespace UNO_Client {
             private static int cardIndex = 0;
             private static Colour nextColour = new Colour();
 
+            
+
             public static void Main() {
+                
                 if (connect()) {
+                    
+
+                    
+
                     do {
-                        waitHandle.WaitOne();
+                        //waitHandle.WaitOne();
 
                         if (gameOver) {
                             Console.ReadKey();
@@ -70,6 +88,7 @@ namespace UNO_Client {
                                 Console.WriteLine("No playable cards in hand.");
                                 Console.WriteLine("press enter to draw another.");
                                 Console.ReadLine();
+                                gm.DrawCard();
 
                                 // call server and draw
                                 if (printHand()) {
@@ -112,8 +131,8 @@ namespace UNO_Client {
                         if (input == "c") {
                             printHand();
                         } else if (int.TryParse(input, out userChoice) == true) {
-                            if (userChoice > 0 && userChoice < hand.Count) {
-                                valid |= true;
+                            if (userChoice > 0 && userChoice <= hand.Count) {
+                                valid = true;
                             } else {
                                 Console.WriteLine("invalid choice, try again");
                             }
@@ -146,6 +165,11 @@ namespace UNO_Client {
                 // can end turn now
                 // call end turn and pass current card and colour to it
                 Console.WriteLine($"Played card: {hand[cardIndex]}");
+
+                //checking if player is out of cards and is the winner
+                if (hand.Count == 0) {
+                    Console.WriteLine($"Player {clientID} Wins");
+                }
             }
 
             public static Colour chooseColour() { 
@@ -202,24 +226,56 @@ namespace UNO_Client {
             }
 
             private static bool connect() {
+                
                 try {
 
+
+                    //InstanceContext context = new InstanceContext(cbObj);
+                    //gm = new GameManager(context);
+                    
                     DuplexChannelFactory<IGameManager> channel = new DuplexChannelFactory<IGameManager>(cbObj, "UNO_Client");
                     gm = channel.CreateChannel();
+                    gm.RegisterClient();
 
-                    Console.WriteLine("Welcome to uno");
                     clientID = gm.JoinGame();
 
-                    Console.WriteLine(clientID.ToString());
+
+                    Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
+                    
+                    //waiting room before game
+                    //Console.WriteLine("Number of players in waiting room: {0}", gm.JoinWaitingRoom());
+                    gm.JoinWaitingRoom();
+                    //char temp = Console.ReadKey().KeyChar;
+                    if (Console.ReadKey().KeyChar != 's') {
+                        gm.LeaveWaitingRoom();
+                        gm.UnregisterClient();
+                        
+                    }
+                    //throw new Exception("Player has left");
+
+
+                    //Console.WriteLine("Welcome to uno");
+
+
+                    //start game now
+                    gameStarted = true;
+
+                    gm.StartGame();
+                    
+                    gm.populateDeck();
+                    gm.shuffleDeck();
+                    gm.DealCards(5, gm.callbackCount());
+                    gm.setFirstCard();
+                    gm.UpdateAllClients();
 
                     // start game loop somewhere here
-                    if (clientID == 1) {
-                        cbObj.Update(clientID, false, new Card(Colour.Red, Value.Nine), Colour.Red, new List<Card> { 
-                            new Card(Colour.Green, Value.Nine),
-                            new Card(Colour.Blue, Value.Nine),
-                            new Card(Colour.Yellow, Value.Nine),
-                        });
-                    }
+                    //if (clientID == 1) {
+                    //    cbObj.Update(clientID, false, new Card(Colour.Red, Value.Nine), Colour.Red, new List<Card> { 
+                    //        new Card(Colour.Green, Value.Nine),
+                    //        new Card(Colour.Blue, Value.Nine),
+                    //        new Card(Colour.Yellow, Value.Nine),
+                    //    });
+                    //}
 
                     return true;
                 } catch (Exception ex) {
@@ -227,8 +283,6 @@ namespace UNO_Client {
                     return false;
                 }
             }
-
-
         }
     }
 }
