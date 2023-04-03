@@ -41,8 +41,11 @@ namespace UNO_Client {
                 Console.Clear();
                 Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
                 Console.WriteLine("Number of players in waiting room: {0}", numPlayers);
-                
-                Console.WriteLine("Press 's' to start game or any other key to leave the waiting room.");
+                if (clientID == 0) {
+                    Console.WriteLine("Press 's' to start game or any other key to leave the waiting room.");
+                } else {
+                    Console.WriteLine("Waiting for player 1 to start game.");
+                }
             }
 
             private static int clientID, activeClientID = 0;
@@ -62,11 +65,12 @@ namespace UNO_Client {
             private static int cardIndex = 0;
             private static Colour nextColour = new Colour();
 
-            
+            private static bool connectedToGame = false;
 
             public static void Main() {
-                
-                if (connect()) { 
+                connect();
+                if (connectedToGame) { 
+                    // consoel handlers thing
                     do {
                         waitHandle.WaitOne();
 
@@ -141,7 +145,7 @@ namespace UNO_Client {
                     // see if card can be played
                     Card c = hand[userChoice - 1];
 
-                    if (c.colour == topOfDiscard.colour || c.value == topOfDiscard.value) {
+                    if (c.colour == topOfDiscard.colour || c.value == topOfDiscard.value || c.colour == currentColour) {
                         // Remove card from player's hand and add to discard pile
                         // play
                         cardIndex = userChoice - 1;
@@ -224,54 +228,37 @@ namespace UNO_Client {
             private static bool connect() {
                 
                 try {
-
-
-                    //InstanceContext context = new InstanceContext(cbObj);
-                    //gm = new GameManager(context);
-                    
                     DuplexChannelFactory<IGameManager> channel = new DuplexChannelFactory<IGameManager>(cbObj, "UNO_Client");
                     gm = channel.CreateChannel();
                     gm.RegisterClient();
 
                     clientID = gm.JoinGame();
 
-
                     Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
                     
                     //waiting room before game
-                    //Console.WriteLine("Number of players in waiting room: {0}", gm.JoinWaitingRoom());
                     gm.JoinWaitingRoom();
-                    //char temp = Console.ReadKey().KeyChar;
-                    if (Console.ReadKey().KeyChar != 's') {
-                        gm.LeaveWaitingRoom();
-                        gm.UnregisterClient();
+
+                    connectedToGame = true;
+                    if (clientID == 0) {
+                        // start player
+                        if (Console.ReadKey().KeyChar != 's') {
+                            gm.LeaveWaitingRoom();
+                            gm.UnregisterClient();
+                            connectedToGame = false;
+                        } else {
+                            //start game now
+                            gameStarted = true;
+
+                            gm.StartGame();
+
+                            gm.populateDeck();
+                            gm.shuffleDeck();
+                            gm.DealCards(5, gm.callbackCount());
+                            gm.setFirstCard();
+                            gm.UpdateAllClients();
+                        }
                     }
-                    //throw new Exception("Player has left");
-
-
-                    //Console.WriteLine("Welcome to uno");
-
-
-                    //start game now
-                    gameStarted = true;
-
-                    gm.StartGame();
-                    
-                    gm.populateDeck();
-                    gm.shuffleDeck();
-                    gm.DealCards(5, gm.callbackCount());
-                    gm.setFirstCard();
-                    gm.UpdateAllClients();
-
-                    // start game loop somewhere here
-                    //if (clientID == 1) {
-                    //    cbObj.Update(clientID, false, new Card(Colour.Red, Value.Nine), Colour.Red, new List<Card> { 
-                    //        new Card(Colour.Green, Value.Nine),
-                    //        new Card(Colour.Blue, Value.Nine),
-                    //        new Card(Colour.Yellow, Value.Nine),
-                    //    });
-                    //}
-
                     return true;
                 } catch (Exception ex) {
                     Console.WriteLine(ex.Message);

@@ -385,7 +385,7 @@ namespace UnoLibrary {
         // process the card choice, set top card of discard.
         // then resolve its effects
         public void EndTurn(int cardIndex, Colour nextColour) {
-            playerIndex = ++playerIndex % callbacks.Count;
+            int nextPlayerIndex = (playerIndex + 1) % callbacks.Count;
 
             // only do if card has been played
             if (cardIndex != -1) {
@@ -398,6 +398,7 @@ namespace UnoLibrary {
                 currentColour = nextColour;
                 // handle special effects here
 
+                // will effect next player index
                 switch (c.value) { 
                     case Value.Reverse: 
                         break;
@@ -410,6 +411,7 @@ namespace UnoLibrary {
                 }
             }
 
+            playerIndex = nextPlayerIndex;
 
             UpdateAllClients();
         }
