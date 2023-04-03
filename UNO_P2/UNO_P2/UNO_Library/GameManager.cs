@@ -422,9 +422,10 @@ namespace UnoLibrary {
             //if players List of cards is empty (if hand is empty)
             if (players.Values.ElementAt(playerIndex).Count == 0) {
                 EndGame(playerIndex + 1);
+                msg += $"Player {playerIndex} is the winner!";
             }
             playerIndex = nextPlayerIndex;
-            msg = CardsInHands() + "\n" + msg;
+            msg += CardsInHands() + "\n" + msg;
             UpdateAllClients(msg);
         }
 

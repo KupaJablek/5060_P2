@@ -30,8 +30,10 @@ namespace UNO_Client {
                 currentColour = cColour;
 
                 if (gameOver) {
-                    Console.WriteLine("Game Over!");
-                    //do stuff to end the game
+                    Console.WriteLine(msg);
+                    Console.WriteLine("\nGame Over!\nCLick any button to exit");
+                    Console.ReadKey();
+                    Environment.Exit(0);
                 }
 
                 else if (clientID == activeClientID) {
@@ -40,7 +42,8 @@ namespace UNO_Client {
                     Console.WriteLine("It's your turn!");
                     waitHandle.Set();
                 } else {
-                    Console.WriteLine($"It is Player {nextPlayer + 1}'s Turn");
+                    Console.WriteLine($"It is Player {nextPlayer + 1}'s Turn\n");
+
                 }
             }
             public void WaitingRoomPlayers(int numPlayers) {
