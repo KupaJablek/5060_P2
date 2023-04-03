@@ -35,9 +35,7 @@ namespace UnoLibrary {
 
         // toString
         public override string ToString() {
-            string output = "";
-
-            output +=  colour.ToString() + " ";
+            string output = colour.ToString() + " ";
 
             switch (this.value) {
                 case Value.wild:

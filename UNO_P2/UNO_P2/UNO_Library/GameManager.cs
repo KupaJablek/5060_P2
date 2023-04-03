@@ -73,7 +73,7 @@ namespace UnoLibrary {
         public void StartGame() {
             populateDeck();
             shuffleDeck();
-            DealCards(1, callbackCount());
+            DealCards(5, callbackCount());
             setFirstCard();
             UpdateAllClients();
         }

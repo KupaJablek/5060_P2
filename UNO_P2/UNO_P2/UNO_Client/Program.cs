@@ -43,6 +43,7 @@ namespace UNO_Client {
                 }
             }
             public void WaitingRoomPlayers(int numPlayers) {
+                playerCount = numPlayers;
                 Console.Clear();
                 Console.WriteLine($"Welcome to UNO Player {clientID + 1}\n\nWaiting for all players");
                 Console.WriteLine("Number of players in waiting room: {0}", numPlayers);
@@ -56,7 +57,7 @@ namespace UNO_Client {
 
             private static int clientID, activeClientID = 0;
             private static bool gameOver = false;
-            private static bool gameStarted = false;
+            private static int playerCount = 0;
 
             private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
             private static CBObject cbObj = new CBObject();
@@ -250,18 +251,25 @@ namespace UNO_Client {
 
                     connectedToGame = true;
                     if (clientID == 0) {
-                        // start player
-                        if (Console.ReadKey().KeyChar == 's') {
+                        while (true) {
+                            // start player
+                            if (Console.ReadKey().KeyChar == 's') {
+                                if (playerCount < 2) {
+                                    Console.WriteLine("Cannot start game with less than two players!");
+                                } else {
+                                    Console.WriteLine();
+                                    //start game now
+                                    gm.StartGame();
+                                    break;
+                                }
+                            } else {
+                                gm.LeaveWaitingRoom();
+                                gm.UnregisterClient();
+                                connectedToGame = false;
+                            }
                             Console.WriteLine();
-                            //start game now
-                            gameStarted = true;
-                            gm.StartGame();
-                        } else {
-                            gm.LeaveWaitingRoom();
-                            gm.UnregisterClient();
-                            connectedToGame = false;
                         }
-                        Console.WriteLine();
+                        
                     }
                     Console.WriteLine("-------------");
                     return true;
