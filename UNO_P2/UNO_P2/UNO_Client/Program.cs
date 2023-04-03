@@ -66,13 +66,9 @@ namespace UNO_Client {
 
             public static void Main() {
                 
-                if (connect()) {
-                    
-
-                    
-
+                if (connect()) { 
                     do {
-                        //waitHandle.WaitOne();
+                        waitHandle.WaitOne();
 
                         if (gameOver) {
                             Console.ReadKey();
@@ -249,7 +245,6 @@ namespace UNO_Client {
                     if (Console.ReadKey().KeyChar != 's') {
                         gm.LeaveWaitingRoom();
                         gm.UnregisterClient();
-                        
                     }
                     //throw new Exception("Player has left");
 
