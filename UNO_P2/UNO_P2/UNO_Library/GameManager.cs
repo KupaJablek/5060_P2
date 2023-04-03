@@ -45,8 +45,6 @@ namespace UnoLibrary {
         [OperationContract(IsOneWay = true)]
         void EndTurn(int cardIndex, Colour nextColour);
 
-        [OperationContract(IsOneWay = true)]
-        void NextCount();
         [OperationContract]
         void populateDeck();
         [OperationContract]
@@ -381,15 +379,6 @@ namespace UnoLibrary {
                 welcome += $"Player {i + 1}\n";
             }
             return welcome;
-        }
-
-        public void NextCount() {
-            // Determine index of the next client that gets to "count"
-            playerIndex = ++playerIndex % callbacks.Count;
-
-            // Increment the count and determine of the game is over
-            // Update all clients
-            UpdateAllClients();
         }
 
         // this will take a card index, and current colour choice
