@@ -29,7 +29,12 @@ namespace UNO_Client {
                 topOfDiscard = top;
                 currentColour = cColour;
 
-                if (clientID == activeClientID) {
+                if (gameOver) {
+                    Console.WriteLine("Game Over!");
+                    //do stuff to end the game
+                }
+
+                else if (clientID == activeClientID) {
                     // Release this client's main thread to let this user "count"
                     Console.Write("It's your turn. Press enter to count.");
                     waitHandle.Set();
@@ -46,6 +51,7 @@ namespace UNO_Client {
                 } else {
                     Console.WriteLine("Waiting for player 1 to start game.");
                 }
+                
             }
 
             private static int clientID, activeClientID = 0;
@@ -245,16 +251,19 @@ namespace UNO_Client {
                     connectedToGame = true;
                     if (clientID == 0) {
                         // start player
-                        if (Console.ReadKey().KeyChar != 's') {
-                            gm.LeaveWaitingRoom();
-                            gm.UnregisterClient();
-                            connectedToGame = false;
-                        } else {
+                        if (Console.ReadKey().KeyChar == 's') {
+                            Console.WriteLine();
                             //start game now
                             gameStarted = true;
                             gm.StartGame();
+                        } else {
+                            gm.LeaveWaitingRoom();
+                            gm.UnregisterClient();
+                            connectedToGame = false;
                         }
+                        Console.WriteLine();
                     }
+                    Console.WriteLine("-------------");
                     return true;
                 } catch (Exception ex) {
                     Console.WriteLine(ex.Message);

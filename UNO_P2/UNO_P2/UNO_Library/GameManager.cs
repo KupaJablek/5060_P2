@@ -73,7 +73,7 @@ namespace UnoLibrary {
         public void StartGame() {
             populateDeck();
             shuffleDeck();
-            DealCards(5, callbackCount());
+            DealCards(1, callbackCount());
             setFirstCard();
             UpdateAllClients();
         }
@@ -120,6 +120,7 @@ namespace UnoLibrary {
         private int nextPlayerID = 1; // id of player
 
         private bool gameStarted = false;
+        private bool gameOver = false;
 
         private readonly Dictionary<int, ICallback> callbacks = null;
         public int callbackCount() {
@@ -341,7 +342,7 @@ namespace UnoLibrary {
                 }
 
                 // top of discard, player hand, 
-                cb.Update(callbacks.Keys.ElementAt(playerIndex), false,
+                cb.Update(callbacks.Keys.ElementAt(playerIndex), gameOver,
                     tod, colour, GetPlayerHand(playerIndex));
             }
         }
@@ -372,6 +373,8 @@ namespace UnoLibrary {
         // then resolve its effects
         public void EndTurn(int cardIndex, Colour nextColour) {
             int nextPlayerIndex = (playerIndex + 1) % callbacks.Count;
+
+            
 
             // only do if card has been played
             if (cardIndex != -1) {
@@ -409,8 +412,17 @@ namespace UnoLibrary {
                 }
             }
 
+            //if players List of cards is empty (if hand is empty)
+            if (players.Values.ElementAt(playerIndex).Count == 0) {
+                EndGame();
+            }
+
             playerIndex = nextPlayerIndex;
 
+            UpdateAllClients();
+        }
+        public void EndGame() {
+            gameOver = true;
             UpdateAllClients();
         }
     }
