@@ -10,9 +10,9 @@ namespace UnoLibrary {
 
     public interface ICallback {
         [OperationContract(IsOneWay = true)]
-        void Update(int nextPlayer, bool gameOver, 
+        void Update(int nextPlayer, bool gameOver,
             Card topOfDiscard, Colour topColour,
-            List<Card> hand);
+            List<Card> hand, string msg);
         [OperationContract(IsOneWay = true)]
         void WaitingRoomPlayers(int numPlayers);
     }
@@ -20,7 +20,7 @@ namespace UnoLibrary {
     [ServiceContract(CallbackContract = typeof(ICallback))]
     public interface IGameManager {
         [OperationContract]
-        void UpdateAllClients();
+        void UpdateAllClients(string m);
         [OperationContract]
         int callbackCount();
         [OperationContract]
@@ -67,7 +67,7 @@ namespace UnoLibrary {
             numberPlayers--;
             UpdateWaitingClients();
             Console.WriteLine("Goodbye");
-            
+
             return numberPlayers;
         }
         public void StartGame() {
@@ -75,7 +75,7 @@ namespace UnoLibrary {
             shuffleDeck();
             DealCards(5, callbackCount());
             setFirstCard();
-            UpdateAllClients();
+            UpdateAllClients("It is player 1's turn");
         }
         public void RegisterClient() {
             ICallback callback = OperationContext.Current.GetCallbackChannel<ICallback>();
@@ -91,8 +91,7 @@ namespace UnoLibrary {
                         for (int j = 0; j < callbacks.Count; j++) {
                             if (j >= i) {
                                 tempCBs.Add(j, callbacks.ElementAt(j).Value);
-                            }
-                            else {
+                            } else {
                                 tempCBs.Add(j, callbacks[j]);
                             }
                         }
@@ -130,7 +129,7 @@ namespace UnoLibrary {
         }
 
 
-    public GameManager() {
+        public GameManager() {
             discard = new List<Card>();
 
             // server variables
@@ -193,8 +192,7 @@ namespace UnoLibrary {
                 if (c.colour == Colour.Wild ||
                     c.value == Value.Skip ||
                     c.value == Value.plus2 ||
-                    c.value == Value.Reverse) 
-                {
+                    c.value == Value.Reverse) {
                     // swap this card with next one on stack
                     firstCardIndex++;
 
@@ -289,7 +287,7 @@ namespace UnoLibrary {
 
         public void DrawCard() {
             players[playerIndex].Add(draw());
-            UpdateAllClients();
+            UpdateAllClients("");
         }
 
         public int JoinGame() {
@@ -322,17 +320,15 @@ namespace UnoLibrary {
                 // Make sure the counting sequence isn't disrupted by removing this client
                 if (i == playerIndex) {
                     // Need to signal the next client to count instead 
-                    UpdateAllClients();
-                }
-
-                else if (playerIndex > i)
+                    UpdateAllClients("Player has left the game");
+                } else if (playerIndex > i)
                     // This prevents a player from being "skipped over" in the turn-taking
                     // of this "game"
                     playerIndex--;
             }
         }
 
-        public void UpdateAllClients() {
+        public void UpdateAllClients(string message) {
             foreach (ICallback cb in callbacks.Values) {
 
                 Card tod = TopOfDiscard();
@@ -345,7 +341,7 @@ namespace UnoLibrary {
 
                 // top of discard, player hand, 
                 cb.Update(callbacks.Keys.ElementAt(playerIndex), gameOver,
-                    tod, colour, GetPlayerHand(playerIndex));
+                    tod, colour, GetPlayerHand(playerIndex), message);
             }
         }
         public void UpdateWaitingClients() {
@@ -376,9 +372,12 @@ namespace UnoLibrary {
         public void EndTurn(int cardIndex, Colour nextColour) {
             int nextPlayerIndex = (playerIndex + (isClockwise ? 1 : -1) + callbacks.Count) % callbacks.Count;
 
+            string msg = "";
+
             // only do if card has been played
             if (cardIndex != -1) {
                 Card c = players[playerIndex].ElementAt(cardIndex);
+                msg += $"Player {playerIndex + 1} played: {c}\n";
                 // card from player hand to discard
                 discard.Add(c);
                 // remove played card from hand
@@ -422,16 +421,23 @@ namespace UnoLibrary {
 
             //if players List of cards is empty (if hand is empty)
             if (players.Values.ElementAt(playerIndex).Count == 0) {
-                EndGame();
-
+                EndGame(playerIndex + 1);
+            }
             playerIndex = nextPlayerIndex;
-
-            UpdateAllClients();
+            msg = CardsInHands() + "\n" + msg;
+            UpdateAllClients(msg);
         }
-    }
-    public void EndGame() {
+
+        public string CardsInHands() {
+            string output = "";
+            foreach (KeyValuePair<int, List<Card>> kvp in players) {
+                output += $"Player {kvp.Key + 1} has {kvp.Value.Count()} cards in hand.\n";
+            }
+            return output;
+        }
+        public void EndGame(int playerNumber) {
             gameOver = true;
-            UpdateAllClients();
+            UpdateAllClients($"Player {playerNumber} has won the game!");
         }
     }
 }

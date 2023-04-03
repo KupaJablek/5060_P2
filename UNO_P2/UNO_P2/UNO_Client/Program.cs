@@ -21,7 +21,7 @@ namespace UNO_Client {
         private class CBObject : ICallback {
             public void Update(int nextPlayer, bool gameStatus,
                 Card top, Colour cColour,
-                List<Card> h) {
+                List<Card> h, string msg) {
 
                 activeClientID = nextPlayer;
                 gameOver = gameStatus;
@@ -36,10 +36,11 @@ namespace UNO_Client {
 
                 else if (clientID == activeClientID) {
                     // Release this client's main thread to let this user "count"
-                    Console.Write("It's your turn. Press enter to count.");
+                    Console.WriteLine(msg);
+                    Console.WriteLine("It's your turn!");
                     waitHandle.Set();
                 } else {
-                    Console.WriteLine("not your turn");
+                    Console.WriteLine($"It is Player {nextPlayer + 1}'s Turn");
                 }
             }
             public void WaitingRoomPlayers(int numPlayers) {
@@ -174,7 +175,7 @@ namespace UNO_Client {
 
                 // can end turn now
                 // call end turn and pass current card and colour to it
-                Console.WriteLine($"Played card: {hand[cardIndex]}");
+                Console.WriteLine($"Played card: {hand[cardIndex]}\n");
 
                 //checking if player is out of cards and is the winner
                 if (hand.Count == 0) {
