@@ -176,9 +176,9 @@ namespace UNO_Client {
                 Colour colour = new Colour();
 
                 bool valid = false;
-                Console.WriteLine("1. Red");
+                Console.WriteLine("1. Blue");
                 Console.WriteLine("2. Green");
-                Console.WriteLine("3. Blue");
+                Console.WriteLine("3. Red");
                 Console.WriteLine("4. Yellow");
                 Console.WriteLine("Enter the number of the colour youd like:");
 
@@ -249,14 +249,7 @@ namespace UNO_Client {
                         } else {
                             //start game now
                             gameStarted = true;
-
                             gm.StartGame();
-
-                            gm.populateDeck();
-                            gm.shuffleDeck();
-                            gm.DealCards(5, gm.callbackCount());
-                            gm.setFirstCard();
-                            gm.UpdateAllClients();
                         }
                     }
                     return true;

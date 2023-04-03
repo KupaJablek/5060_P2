@@ -28,8 +28,6 @@ namespace UnoLibrary {
         [OperationContract]
         int LeaveWaitingRoom();
         [OperationContract]
-        bool StartGame();
-        [OperationContract]
         void RegisterClient();
         [OperationContract]
         void UnregisterClient();
@@ -44,7 +42,8 @@ namespace UnoLibrary {
 
         [OperationContract(IsOneWay = true)]
         void EndTurn(int cardIndex, Colour nextColour);
-
+        [OperationContract]
+        void StartGame();
         [OperationContract]
         void populateDeck();
         [OperationContract]
@@ -71,11 +70,12 @@ namespace UnoLibrary {
             
             return numberPlayers;
         }
-        public bool StartGame() {
-            if (numberPlayers > 1) {
-                return true;
-            }
-            return false;
+        public void StartGame() {
+            populateDeck();
+            shuffleDeck();
+            DealCards(5, callbackCount());
+            setFirstCard();
+            UpdateAllClients();
         }
         public void RegisterClient() {
             ICallback callback = OperationContext.Current.GetCallbackChannel<ICallback>();
@@ -128,12 +128,7 @@ namespace UnoLibrary {
 
 
     public GameManager() {
-            populateDeck();
-            shuffleDeck();
-
-
             discard = new List<Card>();
-            //setFirstCard(); // only needs to happen at start of new game
 
             // server variables
             playerIndex = 0;
@@ -305,16 +300,6 @@ namespace UnoLibrary {
 
             callbacks.Add(nextPlayerID, cb);
 
-            /*
-                not meant to be here but testing out the gameplay loop    
-            */
-
-            //gameStarted = true;
-            //populateDeck();
-            //shuffleDeck();
-            //DealCards(5, callbacks.Count());
-            //setFirstCard();
-
             return nextPlayerID++;
         }
 
@@ -373,7 +358,7 @@ namespace UnoLibrary {
         public string WelcomeMessage() {
             string welcome = "Players in Lobby";
             for (int i = 0; i < callbacks.Count() - 1; i++) {
-                if (i != 0) { 
+                if (i != 0) {
                     welcome += "\t";
                 }
                 welcome += $"Player {i + 1}\n";
@@ -405,8 +390,19 @@ namespace UnoLibrary {
                     case Value.Skip:
                         break;
                     case Value.plus2:
+                        // add two cards to the next players hand
+                        List<Card> add2 = players[nextPlayerIndex];
+                        add2.Add(draw());
+                        add2.Add(draw());
+                        players[nextPlayerIndex] = add2;
                         break;
                     case Value.wild4:
+                        List<Card> add4 = players[nextPlayerIndex];
+                        add4.Add(draw());
+                        add4.Add(draw());
+                        add4.Add(draw());
+                        add4.Add(draw());
+                        players[nextPlayerIndex] = add4;
                         break;
                 }
             }
