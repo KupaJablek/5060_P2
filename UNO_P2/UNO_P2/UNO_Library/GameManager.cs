@@ -119,6 +119,8 @@ namespace UnoLibrary {
         private int playerIndex = 0; // to track index of player in player list
         private int nextPlayerID = 1; // id of player
 
+        private bool isClockwise = true;
+
         private bool gameStarted = false;
         private bool gameOver = false;
 
@@ -372,9 +374,7 @@ namespace UnoLibrary {
         // process the card choice, set top card of discard.
         // then resolve its effects
         public void EndTurn(int cardIndex, Colour nextColour) {
-            int nextPlayerIndex = (playerIndex + 1) % callbacks.Count;
-
-            
+            int nextPlayerIndex = (playerIndex + (isClockwise ? 1 : -1) + callbacks.Count) % callbacks.Count;
 
             // only do if card has been played
             if (cardIndex != -1) {
@@ -388,11 +388,19 @@ namespace UnoLibrary {
                 // handle special effects here
 
                 // will effect next player index
-                switch (c.value) { 
-                    case Value.Reverse: 
+                switch (c.value) {
+                    case Value.Reverse:
+                        if (callbacks.Count == 2) {
+                            // If there are only two players, Reverse has no effect, so just skip the turn of the current player
+                            nextPlayerIndex = (playerIndex + 1) % callbacks.Count;
+                        } else {
+                            // If there are more than two players, Reverse changes the direction of play
+                            isClockwise = !isClockwise;
+                            nextPlayerIndex = (playerIndex + (isClockwise ? 1 : -1) + callbacks.Count) % callbacks.Count;
+                        }
                         break;
                     case Value.Skip:
-                        nextPlayerIndex = (playerIndex + 2) % callbacks.Count;
+                        nextPlayerIndex = (playerIndex + (isClockwise ? 2 : -2) + callbacks.Count) % callbacks.Count;
                         break;
                     case Value.plus2:
                         // add two cards to the next players hand
@@ -415,13 +423,13 @@ namespace UnoLibrary {
             //if players List of cards is empty (if hand is empty)
             if (players.Values.ElementAt(playerIndex).Count == 0) {
                 EndGame();
-            }
 
             playerIndex = nextPlayerIndex;
 
             UpdateAllClients();
         }
-        public void EndGame() {
+    }
+    public void EndGame() {
             gameOver = true;
             UpdateAllClients();
         }
